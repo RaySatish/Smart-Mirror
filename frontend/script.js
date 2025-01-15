@@ -80,7 +80,16 @@ function updateTime() {
 	];
 	const day = days[now.getDay()];
 	const date = now.toLocaleDateString();
-	const time = now.toLocaleTimeString();
+
+	let hours = now.getHours();
+	const minutes = now.getMinutes();
+	const seconds = now.getSeconds();
+	const ampm = hours >= 12 ? "PM" : "AM";
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	const time = `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
+		.toString()
+		.padStart(2, "0")} ${ampm}`;
 
 	document.getElementById("time").innerText = time;
 	document.getElementById("date").innerText = `${day}, ${date}`;
@@ -109,16 +118,18 @@ function fetchWeather(lat, lon) {
 			const city = data.location.name;
 			const weather = data.current.condition.text;
 			const temperature = data.current.temp_c;
+			const iconUrl = data.current.condition.icon;
 			document.getElementById("location").innerText = city;
 			document.getElementById(
-				"weather"
-			).innerText = `${weather} ${temperature}°C`;
+				"weather-info"
+			).innerText = `${weather}, ${temperature}°C`;
+			document.getElementById("weather-icon").src = iconUrl;
 		})
 		.catch((error) => {
 			console.error("Error fetching weather data:", error);
 			document.getElementById("location").innerText =
 				"Error fetching location data.";
-			document.getElementById("weather").innerText =
+			document.getElementById("weather-info").innerText =
 				"Error fetching weather data.";
 		});
 }
