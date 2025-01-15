@@ -5,6 +5,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Smart Mirror</title>
 		<link rel="stylesheet" href="styles.css" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="script-src 'self' https://apis.google.com https://www.gstatic.com 'unsafe-inline' 'unsafe-eval';"
+		/>
 		<script src="https://apis.google.com/js/api.js"></script>
 	</head>
 	<body>
@@ -12,7 +16,7 @@
 			<div id="date"></div>
 			<div id="time"></div>
 			<div id="calendar">
-				<h2>Google Calendar Events</h2>
+				<h2>Events</h2>
 				<ul id="calendar-events"></ul>
 			</div>
 		</div>

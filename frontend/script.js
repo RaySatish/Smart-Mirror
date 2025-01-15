@@ -1,6 +1,6 @@
 const CLIENT_ID =
 	"511003287407-869jqur50cgpult0ljbi4lu9migk99ba.apps.googleusercontent.com";
-const API_KEY = "YOUR_ACTUAL_API_KEY"; // Replace with your actual API key
+const API_KEY = "AIzaSyANRgwR_FnteJ5jqGUUPUsib3qN6V3_Z2Q"; // Replace with your actual API key
 const DISCOVERY_DOCS = [
 	"https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
 ];
@@ -112,7 +112,7 @@ function fetchWeather(lat, lon) {
 			document.getElementById("location").innerText = city;
 			document.getElementById(
 				"weather"
-			).innerText = `${weather}, ${temperature}°C`;
+			).innerText = `${weather} ${temperature}°C`;
 		})
 		.catch((error) => {
 			console.error("Error fetching weather data:", error);
@@ -153,18 +153,18 @@ function fetchNews() {
 
 function displayQuotes() {
 	const quotes = [
-		"Focus on what you can control..",
+		"Focus on what you can control.",
 		'"You become what you give your attention to." - Epictetus',
 		'"We suffer more in imagination than in reality." - Seneca',
 		"You can't learn what you think you already know.",
 		"Stop waiting to demand the best for yourself.",
 		'"Be tolerant with others and strict with yourself." - Marcus Aurelius',
-		'"Don\'t explain your philosophy. Embody it." Epictetus',
+		'"Don\'t explain your philosophy. Embody it." - Epictetus',
 		"Associate only with people who improve you.",
-		'"The greatest remedy for anger is delay." Seneca',
+		'"The greatest remedy for anger is delay." - Seneca',
 		"Value time more than possessions.",
 		"You always own the option of having no opinion.",
-		'"Never be overheard complaining...even to yourself." Marcus Aurelius',
+		'"Never be overheard complaining...even to yourself." - Marcus Aurelius',
 		"Most of what we say and do is not essential.",
 		"Difficulties show a person's character.",
 		'"Limit yourself to the present." - Marcus Aurelius',
