@@ -109,7 +109,7 @@ function updateLocation() {
 
 function fetchWeather(lat, lon) {
 	const apiKey = "513f42cbe1ff40cb84f64300251501"; // Replace with your OpenWeatherMap API key
-	const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=Bengaluru&aqi=yes`;
+	const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=Katpadi&aqi=yes`;
 
 	fetch(url)
 		.then((response) => response.json())
