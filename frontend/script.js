@@ -1,6 +1,12 @@
-const CLIENT_ID =
-	"511003287407-869jqur50cgpult0ljbi4lu9migk99ba.apps.googleusercontent.com";
-const API_KEY = "AIzaSyANRgwR_FnteJ5jqGUUPUsib3qN6V3_Z2Q"; // Replace with your actual API key
+import {
+	CalendarClientID,
+	CalendarAPI,
+	WeatherAPI,
+	NewsAPI,
+} from "./config.js";
+
+const CLIENT_ID = CalendarClientID;
+const API_KEY = CalendarAPI; // Replace with your actual API key
 const DISCOVERY_DOCS = [
 	"https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
 ];
@@ -108,7 +114,7 @@ function updateLocation() {
 }
 
 function fetchWeather(lat, lon) {
-	const apiKey = "513f42cbe1ff40cb84f64300251501"; // Replace with your OpenWeatherMap API key
+	const apiKey = WeatherAPI; // Replace with your OpenWeatherMap API key
 	const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=Katpadi&aqi=yes`;
 
 	fetch(url)
@@ -135,7 +141,7 @@ function fetchWeather(lat, lon) {
 }
 
 function fetchNews() {
-	const apiKey = "9cb970795b7d4d6e86d9e294b29f16d5";
+	const apiKey = NewsAPI;
 	const url = `https://newsapi.org/v2/everything?q=stock%20market&apiKey=${apiKey}`;
 
 	fetch(url)
