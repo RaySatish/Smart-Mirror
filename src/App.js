@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-const API_KEY = process.env.REACT_APP_API_KEY;
-const DISCOVERY_DOC =
-	"https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest";
-const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 const WEATHER_API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
 const NEWS_API_KEY = process.env.REACT_APP_NEWS_API_KEY;
 
@@ -15,16 +10,11 @@ function App() {
 	const [events, setEvents] = useState([]);
 	const [location, setLocation] = useState("");
 	const [weather, setWeather] = useState("");
-	const [temperature, setTemperature] = useState("");
 	const [weatherIcon, setWeatherIcon] = useState("");
 	const [quote, setQuote] = useState("");
 	const [news, setNews] = useState("");
 	const [quoteVisible, setQuoteVisible] = useState(true);
 	const [newsVisible, setNewsVisible] = useState(true);
-
-	let tokenClient;
-	let gapiInited = false;
-	let gisInited = false;
 
 	useEffect(() => {
 		updateTime();
@@ -32,108 +22,11 @@ function App() {
 		updateLocation();
 		fetchNews();
 		displayQuotes();
-		gapiLoaded();
-		gisLoaded();
 
-		// Cleanup intervals on component unmount
 		return () => {
 			clearInterval(timeInterval);
 		};
 	}, []);
-
-	const gapiLoaded = () => {
-		window.gapi.load("client", initializeGapiClient);
-	};
-
-	const initializeGapiClient = async () => {
-		await window.gapi.client.init({
-			apiKey: API_KEY,
-			discoveryDocs: [DISCOVERY_DOC],
-		});
-		gapiInited = true;
-		maybeEnableButtons();
-	};
-
-	const gisLoaded = () => {
-		tokenClient = window.google.accounts.oauth2.initTokenClient({
-			client_id: CLIENT_ID,
-			scope: SCOPES,
-			callback: "", // defined later
-		});
-		gisInited = true;
-		maybeEnableButtons();
-	};
-
-	const maybeEnableButtons = () => {
-		if (gapiInited && gisInited) {
-			document.getElementById("authorize_button").style.visibility = "visible";
-		}
-	};
-
-	const handleAuthClick = () => {
-		if (!tokenClient) {
-			console.error("Token client is not initialized");
-			return;
-		}
-
-		tokenClient.callback = async (resp) => {
-			if (resp.error !== undefined) {
-				throw resp;
-			}
-			document.getElementById("signout_button").style.visibility = "visible";
-			document.getElementById("authorize_button").innerText = "Refresh";
-			await listUpcomingEvents();
-		};
-
-		if (window.gapi.client.getToken() === null) {
-			tokenClient.requestAccessToken({ prompt: "consent" });
-		} else {
-			tokenClient.requestAccessToken({ prompt: "" });
-		}
-	};
-
-	const handleSignoutClick = () => {
-		const token = window.gapi.client.getToken();
-		if (token !== null) {
-			window.google.accounts.oauth2.revoke(token.access_token);
-			window.gapi.client.setToken("");
-			document.getElementById("content").innerText = "";
-			document.getElementById("authorize_button").innerText = "Authorize";
-			document.getElementById("signout_button").style.visibility = "hidden";
-		}
-	};
-
-	const listUpcomingEvents = async () => {
-		let response;
-		try {
-			const request = {
-				calendarId: "primary",
-				timeMin: new Date().toISOString(),
-				showDeleted: false,
-				singleEvents: true,
-				maxResults: 10,
-				orderBy: "startTime",
-			};
-			response = await window.gapi.client.calendar.events.list(request);
-		} catch (err) {
-			document.getElementById("content").innerText = err.message;
-			return;
-		}
-
-		const events = response.result.items;
-		if (!events || events.length === 0) {
-			document.getElementById("content").innerText = "No events found.";
-			return;
-		}
-		const output = events.reduce(
-			(str, event) =>
-				`${str}${event.summary} (${
-					event.start.dateTime || event.start.date
-				})\n`,
-			"Events:\n"
-		);
-		document.getElementById("content").innerText = output;
-	};
 
 	const updateTime = () => {
 		const now = new Date();
@@ -154,7 +47,7 @@ function App() {
 		const seconds = now.getSeconds();
 		const ampm = hours >= 12 ? "PM" : "AM";
 		hours = hours % 12;
-		hours = hours ? hours : 12; // the hour '0' should be '12'
+		hours = hours ? hours : 12;
 		const time = `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
 			.toString()
 			.padStart(2, "0")} ${ampm}`;
@@ -180,7 +73,7 @@ function App() {
 			return;
 		}
 
-		const url = `http://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${lat},${lon}&aqi=yes`;
+		const url = `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${lat},${lon}&aqi=yes`;
 
 		fetch(url)
 			.then((response) => response.json())
@@ -222,11 +115,11 @@ function App() {
 							currentIndex = (currentIndex + 1) % articles.length;
 						}
 						setNewsVisible(true);
-					}, 500); // Transition duration
+					}, 500);
 				}
 
 				displayNextArticle();
-				setInterval(displayNextArticle, 10000); // 10 seconds delay
+				setInterval(displayNextArticle, 10000);
 			})
 			.catch((error) => {
 				console.error("Error fetching news data:", error);
@@ -266,11 +159,11 @@ function App() {
 				setQuote(quotes[currentIndex]);
 				currentIndex = (currentIndex + 1) % quotes.length;
 				setQuoteVisible(true);
-			}, 500); // Transition duration
+			}, 500);
 		}
 
 		displayNextQuote();
-		setInterval(displayNextQuote, 10000); // 10 seconds delay
+		setInterval(displayNextQuote, 10000);
 	};
 
 	return (
@@ -310,20 +203,6 @@ function App() {
 					{news}
 				</div>
 			</div>
-			<button
-				id="authorize_button"
-				onClick={handleAuthClick}
-				style={{ visibility: "hidden" }}
-			>
-				Authorize
-			</button>
-			<button
-				id="signout_button"
-				onClick={handleSignoutClick}
-				style={{ visibility: "hidden" }}
-			>
-				Sign Out
-			</button>
 			<pre id="content" style={{ whiteSpace: "pre-wrap" }}></pre>
 		</div>
 	);
