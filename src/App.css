@@ -29,6 +29,12 @@ body {
 	text-align: right;
 }
 
+#weather-message {
+	position: absolute;
+	top: 80px;
+	right: 10px;
+	text-align: right;
+}
 #location,
 #weather {
 	font-size: 1em;
@@ -50,7 +56,7 @@ body {
 	text-align: center;
 	margin: auto;
 	position: absolute;
-	top: 50%;
+	top: 80%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
@@ -84,6 +90,7 @@ body {
 	font-size: 0.6em;
 	margin-top: 10px;
 	transition: opacity 0.5s ease-in-out;
+	left: 50%;
 }
 
 #news-item.hidden {
